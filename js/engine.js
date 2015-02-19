@@ -25,7 +25,7 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
+    canvas.width = 606;
     canvas.height = 606;
     doc.body.appendChild(canvas);
 
@@ -95,6 +95,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        shield.update(dt);
     }
 
     /* This function initially draws the "game level", it will then call
@@ -107,24 +108,24 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
-            ],
-            numRows = 6,
-            numCols = 5,
-            row, col;
+        // var rowImages = [
+        //         'images/water-block.png',   // Top row is water
+        //         'images/stone-block.png',   // Row 1 of 3 of stone
+        //         'images/stone-block.png',   // Row 2 of 3 of stone
+        //         'images/stone-block.png',   // Row 3 of 3 of stone
+        //         'images/grass-block.png',   // Row 1 of 2 of grass
+        //         'images/grass-block.png'    // Row 2 of 2 of grass
+        //     ],
+        //     numRows = 6,
+        //     numCols = 5,
+        //     row, col;
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
-        for (row = 0; row < numRows; row++) {
-            for (col = 0; col < numCols; col++) {
+        // for (row = 0; row < numRows; row++) {
+        //     for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
                  * requires 3 parameters: the image to draw, the x coordinate
                  * to start drawing and the y coordinate to start drawing.
@@ -132,11 +133,11 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
-            }
-        }
+        //         ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+        //     }
+        // }
 
-
+        ctx.drawImage(Resources.get('images/spaceBackground3.png'),0,0);
         renderEntities();
     }
 
@@ -153,6 +154,8 @@ var Engine = (function(global) {
         });
 
         player.render();
+        shield.render();
+        weapon.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -168,11 +171,22 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        'images/stone-block.png',
-        'images/water-block.png',
-        'images/grass-block.png',
-        'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/reaverShip.png',
+        'images/serenityShip.png',
+        'images/ShipShieldLt.png',
+        'images/spaceBackground3.png',
+        'images/shield-1.png',
+        'images/shield-3.png',
+        'images/shield-0.png',
+        'images/shield-2.png',
+        'images/strike-1.png',
+        'images/strike-2.png',
+        'images/strike-3.png',
+        'images/strike-4.png',
+        'images/strike-5.png',
+        'images/strike-6.png',
+        'images/strike-7.png',
+        'images/strike-8.png'
     ]);
     Resources.onReady(init);
 
