@@ -12,17 +12,17 @@ animate = function(){
 }
 //random function for placing enemies and items
 function getRandom(min, max) {
-  return Math.random() * (max - min) + min;
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 // Enemies our player must avoid
 var Enemy = function() {
     this.sprite = 'images/reaverShip.png';
     this.cross = [108,191,274,357];
-    this.startCross = getRandom(0,3);
-    this.y=this.cross[this.startCross];
-    this.x=-102;
-    this.speed = getRandom(140,200);
+    this.startCross = getRandom(0,4);
+    this.y = this.cross[this.startCross];
+    this.x = getRandom(-400,-102);
+    this.speed = getRandom(100,200);
 }
 
 // Update the enemy's position, required method for game
@@ -42,18 +42,24 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function(){
-    this.sprite = 'images/serenityShip.png';
+    this.direction = 0;
+    this.sprite = ['images/serenityShip.png',
+        'images/serenityShipDn.png'];
     this.x=359;
     this.y=425;
+
 }
 
-Player.prototype.update=function(dt){
-    // this.x = this.x + this.speed * dt;
+Player.prototype.update=function(){
+    if (this.y>=425) {
+        this.direction=0;
+    } else if (this.y<=11) {
+        this.direction=1;
+    }else{};
 }
 
 Player.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    // ctx.drawImage(Resources.get('images/ShipShieldLt.png'), this.x-20, this.y-5);
+    ctx.drawImage(Resources.get(this.sprite[this.direction]), this.x, this.y);
 }
 
 Player.prototype.handleInput=function(key){
@@ -61,10 +67,12 @@ Player.prototype.handleInput=function(key){
     if (key === "up") {
         if (this.y - 83 >= -15) {
             this.y = this.y - (83);
+            this.direction=0;
         }
     } else if (key === "down") {
         if (this.y + 83 <= 425) {
            this.y = this.y + 83;
+           this.direction=1;
         }
     } else if (key === "right") {
         if (this.x + 86 <= 606) {

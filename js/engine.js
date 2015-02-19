@@ -173,20 +173,21 @@ var Engine = (function(global) {
     Resources.load([
         'images/reaverShip.png',
         'images/serenityShip.png',
+        'images/serenityShipDn.png',
         'images/ShipShieldLt.png',
         'images/spaceBackground3.png',
-        'images/shield-1.png',
-        'images/shield-3.png',
-        'images/shield-0.png',
-        'images/shield-2.png',
-        'images/strike-1.png',
-        'images/strike-2.png',
-        'images/strike-3.png',
-        'images/strike-4.png',
-        'images/strike-5.png',
-        'images/strike-6.png',
-        'images/strike-7.png',
-        'images/strike-8.png'
+        'images/shield-1.png', //by Niantic Labs. Copyright 2015
+        'images/shield-3.png', //by Niantic Labs. Copyright 2015
+        'images/shield-0.png', //by Niantic Labs. Copyright 2015
+        'images/shield-2.png', //by Niantic Labs. Copyright 2015
+        'images/strike-1.png', //by Niantic Labs. Copyright 2015
+        'images/strike-2.png', //by Niantic Labs. Copyright 2015
+        'images/strike-3.png', //by Niantic Labs. Copyright 2015
+        'images/strike-4.png', //by Niantic Labs. Copyright 2015
+        'images/strike-5.png', //by Niantic Labs. Copyright 2015
+        'images/strike-6.png', //by Niantic Labs. Copyright 2015
+        'images/strike-7.png', //by Niantic Labs. Copyright 2015
+        'images/strike-8.png' //by Niantic Labs. Copyright 2015
     ]);
     Resources.onReady(init);
 
