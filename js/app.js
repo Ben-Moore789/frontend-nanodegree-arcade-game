@@ -134,8 +134,13 @@ var Shield = function(){
     this.sprite = ['images/shield-0.png','images/shield-1.png',
         'images/shield-2.png','images/shield-3.png', 'images/shield-0.png',
         'images/shield-1.png','images/shield-2.png','images/shield-3.png'];
-    this.x = 18;
-    this.y = 36;
+    this.row = [119,202,285,368];
+    this.startRow = getRandom(0,4);
+    this.y = this.row[this.startRow];
+    this.col = [18,104,190,276,362,448,534];
+    this.startCol = getRandom(0,7);
+    this.x = this.col[this.startCol];
+    this.lane = this.y+25;
     this.center = this.x+27;
 }
 Shield.prototype = Object.create(BonusItem.prototype);
@@ -150,6 +155,7 @@ var Weapon = function(){
         'images/strike-6.png','images/strike-7.png','images/strike-8.png'];
     this.x = 96;
     this.y = 41;
+    this.lane = this.y+20;
     this.center = this.x+35;
 }
 Weapon.prototype = Object.create(BonusItem.prototype);
@@ -206,7 +212,7 @@ function checkCollisions() {
         allItems.forEach(function(item){
             //check location of ship against items
             //pick up item
-            if(player.lane === 61){
+            if(player.lane === item.lane){
                 if (player.x+30 === item.center) {
                     var index = allItems.indexOf(item);
                     allItems.splice(index, 1);
