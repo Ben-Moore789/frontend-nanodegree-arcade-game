@@ -18,10 +18,8 @@ var Enemy = function() {
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
-    this.x = this.x + this.speed * dt;
+    // increase new enemy speed every time player makes it back to start
+    this.x = this.x + (this.speed + (start*15)) * dt;
     this.right = this.x+96;
     // remove enemies if out of screen
     if (this.x > 606) {
@@ -44,7 +42,7 @@ function newEnemies(){
     allEnemies.push(enemy);
 }
 
-//Create enemies at 2second intervals
+//Create enemies at intervals, adjusted based on level
 var spawnInterval = setInterval(newEnemies, 1500);
 
 // Now write your own player class
@@ -219,5 +217,20 @@ function checkCollisions() {
                 };
             };
         });
+    }
+}
+var goal = 0; //update when player reaches other side
+var start = 0; //update when player returns to start
+
+// increase difficulty when player makes it back to start after reaching
+// the other side.  
+function levelUp() {
+    if (61 === player.lane) if (goal === start) goal++;
+    if (476 === player.lane) {
+        if (goal > start) {
+            start++; //used to increase enemy.speed
+            //add a new enemy spawn interval every 10 seconds
+            spawnInterval = setInterval(newEnemies, 10000);    
+        }
     }
 }
