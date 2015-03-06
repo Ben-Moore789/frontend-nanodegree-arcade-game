@@ -1,15 +1,3 @@
-//animation function for images
-var calls=0; //counts number of times update is called
-var imgCount=0; //counter for animating images
-animate = function(){
-    calls++;
-    if (calls%15===0) {
-        imgCount++;
-        if (imgCount===8) {
-            imgCount=0;
-        };
-    };
-}
 //random function for placing enemies and items
 function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -126,27 +114,29 @@ document.addEventListener('keyup', function(e) {
 
 //Create BonusItem superclass render and update functions
 var BonusItem = function(){
-    this.center=0;
+    this.imgCount=0;
 }
 BonusItem.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.sprite[imgCount]), this.x, this.y);
-    this.center = this.x+(this.sprite.width/2);
+    ctx.drawImage(Resources.get(this.sprite[this.imgCount]), this.x, this.y);
 }
-BonusItem.prototype.update = animate;
+BonusItem.prototype.update = function(calls){
+    if (calls%10===0) {
+        this.imgCount++;
+        if (this.imgCount===8) {
+            this.imgCount=0;
+        };
+    };
+}
 
 //create BonusItem shield objects
 var Shield = function(){
     BonusItem.call(this);
-    this.sprite = ['images/shield-0.png',
-        'images/shield-1.png',
-        'images/shield-2.png',
-        'images/shield-3.png',
-        'images/shield-0.png',
-        'images/shield-1.png',
-        'images/shield-2.png',
-        'images/shield-3.png'];
+    this.sprite = ['images/shield-0.png','images/shield-1.png',
+        'images/shield-2.png','images/shield-3.png', 'images/shield-0.png',
+        'images/shield-1.png','images/shield-2.png','images/shield-3.png'];
     this.x = 18;
     this.y = 36;
+    this.center = this.x+27;
 }
 Shield.prototype = Object.create(BonusItem.prototype);
 Shield.prototype.constructor = Shield;
@@ -155,20 +145,37 @@ Shield.prototype.constructor = Shield;
 //create BonusItem Weapon objects
 var Weapon = function(){
     BonusItem.call(this);
-    this.sprite = ['images/strike-1.png',
-        'images/strike-2.png',
-        'images/strike-3.png',
-        'images/strike-4.png',
-        'images/strike-5.png',
-        'images/strike-6.png',
-        'images/strike-7.png',
-        'images/strike-8.png'];
+    this.sprite = ['images/strike-1.png','images/strike-2.png',
+        'images/strike-3.png','images/strike-4.png','images/strike-5.png',
+        'images/strike-6.png','images/strike-7.png','images/strike-8.png'];
     this.x = 96;
     this.y = 41;
+    this.center = this.x+35;
 }
-
 Weapon.prototype = Object.create(BonusItem.prototype);
 Weapon.prototype.constructor = Weapon;
+
+var Boom = function() {
+    BonusItem.call(this);
+    this.sprite = [ "images/boom-1.png", "images/boom-2.png", 
+        "images/boom-3.png", "images/boom-4.png", "images/boom-5.png", 
+        "images/boom-6.png", "images/boom-7.png", "images/boom-8.png" ];
+    this.x = 0;
+    this.y = 0;
+    this.update = function(calls) {
+        if (calls % 10 === 0) {
+            this.imgCount++;
+            if (8 === this.imgCount) {
+                var index = allItems.indexOf(this);
+                allItems.splice(index, 1);
+                this.imgCount=0
+            }
+        }
+    };
+};
+Boom.prototype = Object.create(BonusItem.prototype);
+Boom.prototype.constructor = Boom;
+var boom = new Boom;
 
 var allItems = [];
 function newItem(){
@@ -186,6 +193,9 @@ function checkCollisions() {
             //reset player if collision
             if(player.lane === enemy.lane){
                 if (player.x > enemy.x-50 && player.x < enemy.right) {
+                    boom.x=player.x-8;
+                    boom.y=player.y+6;
+                    allItems.push(boom);
                     player.x = 273;
                     player.y = 425;
                 }
@@ -196,10 +206,10 @@ function checkCollisions() {
         allItems.forEach(function(item){
             //check location of ship against items
             //pick up item
-            if(player.lane === 11){
+            if(player.lane === 61){
                 if (player.x+30 === item.center) {
-                    var index = allEnemies.indexOf(this);
-                    allEnemies.splice(index, 1);
+                    var index = allItems.indexOf(item);
+                    allItems.splice(index, 1);
                 };
             };
         });

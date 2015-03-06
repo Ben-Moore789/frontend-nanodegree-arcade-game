@@ -23,6 +23,7 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        calls=0,
         lastTime;
 
     canvas.width = 606;
@@ -39,18 +40,20 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
+        calls++;
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
          */
-        update(dt);
+        update(dt,calls);
         render();
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
          */
+
         lastTime = now;
 
         /* Use the browser's requestAnimationFrame function to call this
@@ -78,8 +81,8 @@ var Engine = (function(global) {
      * functionality this way (you could just implement collision detection
      * on the entities themselves within your app.js file).
      */
-    function update(dt) {
-        updateEntities(dt);
+    function update(dt,calls) {
+        updateEntities(dt,calls);
         checkCollisions();
     }
 
@@ -90,13 +93,13 @@ var Engine = (function(global) {
      * the data/properties related to  the object. Do your drawing in your
      * render methods.
      */
-    function updateEntities(dt) {
+    function updateEntities(dt,calls) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
         player.update();
         allItems.forEach(function(item) {
-            item.update(dt);
+            item.update(calls);
         });
     }
 
@@ -142,22 +145,19 @@ var Engine = (function(global) {
      */
     Resources.load([
         'images/smurfShip.png',
-        'images/frogShipUp.png',
-        'images/frogShipDn.png',
+        'images/frogShipUp.png', 'images/frogShipDn.png',
         'images/ShipShieldLt.png',
         'images/spaceBackground3.png',
-        'images/shield-1.png', //by Niantic Labs. Copyright 2015
-        'images/shield-3.png', //by Niantic Labs. Copyright 2015
-        'images/shield-0.png', //by Niantic Labs. Copyright 2015
-        'images/shield-2.png', //by Niantic Labs. Copyright 2015
-        'images/strike-1.png', //by Niantic Labs. Copyright 2015
-        'images/strike-2.png', //by Niantic Labs. Copyright 2015
-        'images/strike-3.png', //by Niantic Labs. Copyright 2015
-        'images/strike-4.png', //by Niantic Labs. Copyright 2015
-        'images/strike-5.png', //by Niantic Labs. Copyright 2015
-        'images/strike-6.png', //by Niantic Labs. Copyright 2015
-        'images/strike-7.png', //by Niantic Labs. Copyright 2015
-        'images/strike-8.png' //by Niantic Labs. Copyright 2015
+        'images/shield-0.png', 'images/shield-1.png', //by Niantic Labs. Copyright 2015
+        'images/shield-2.png', 'images/shield-3.png', 
+        'images/strike-1.png', 'images/strike-2.png', //by Niantic Labs. Copyright 2015
+        'images/strike-3.png', 'images/strike-4.png', 
+        'images/strike-5.png', 'images/strike-6.png', 
+        'images/strike-7.png', 'images/strike-8.png', 
+        'images/boom-1.png', 'images/boom-2.png',
+        'images/boom-3.png', 'images/boom-4.png',
+        'images/boom-5.png', 'images/boom-6.png',
+        'images/boom-7.png', 'images/boom-8.png'
     ]);
     Resources.onReady(init);
 
