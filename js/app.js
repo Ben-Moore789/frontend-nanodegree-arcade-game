@@ -87,7 +87,7 @@ Player.prototype.handleInput = function(key) {
             this.direction = 1;
         }
     } else if (key === "right") {
-        if (this.x + 86 <= 631) {
+        if (this.x + 86 <= 606) {
             this.x = this.x + (86);
         }
     } else if (key === "left") {
