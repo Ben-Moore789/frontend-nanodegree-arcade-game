@@ -3,7 +3,9 @@ function getRandom(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// Enemies our player must avoid
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ENEMIES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 var Enemy = function() {
     this.sprite = 'images/smurfShip.png';
     this.cross = [108,191,274,357];
@@ -19,7 +21,7 @@ var Enemy = function() {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     // increase new enemy speed every time player makes it back to start
-    this.x = this.x + (this.speed + (start*15)) * dt;
+    this.x = this.x + (this.speed + (returns*15)) * dt;
     this.right = this.x+96;
     // remove enemies if out of screen
     if (this.x > 606) {
@@ -45,14 +47,14 @@ function newEnemies(){
 //Create enemies at intervals, adjusted based on level
 var spawnInterval = setInterval(newEnemies, 1500);
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX PLAYER XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 var Player = function(){
     this.direction = 0;
     this.sprite = ['images/frogShipUp.png',
         'images/frogShipDn.png'];
-    this.x=273;
+    this.x=298;
     this.y=425;
     this.lane = this.y+51;
 }
@@ -83,7 +85,7 @@ Player.prototype.handleInput=function(key){
            this.direction=1;
         }
     } else if (key === "right") {
-        if (this.x + 86 <= 606) {
+        if (this.x + 86 <= 631) {
            this.x = this.x + (86);
         }
     } else if (key === "left") {
@@ -93,9 +95,7 @@ Player.prototype.handleInput=function(key){
     }
 }
 
-// Place the player object in a variable called player
 var player = new Player();
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -110,6 +110,9 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ITEMS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //Create BonusItem superclass render and update functions
 var BonusItem = function(){
     this.imgCount=0;
@@ -118,6 +121,7 @@ BonusItem.prototype.render = function(){
     ctx.drawImage(Resources.get(this.sprite[this.imgCount]), this.x, this.y);
 }
 BonusItem.prototype.update = function(calls){
+    //iterate throught the sprites for items to "animate"
     if (calls%10===0) {
         this.imgCount++;
         if (this.imgCount===8) {
@@ -125,6 +129,10 @@ BonusItem.prototype.update = function(calls){
         };
     };
 }
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX SHIELDS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 //create BonusItem shield objects
 var Shield = function(){
@@ -135,7 +143,7 @@ var Shield = function(){
     this.row = [119,202,285,368];
     this.startRow = getRandom(0,4);
     this.y = this.row[this.startRow];
-    this.col = [18,104,190,276,362,448,534];
+    this.col = [43,129,215,301,387,473,559];
     this.startCol = getRandom(0,7);
     this.x = this.col[this.startCol];
     this.lane = this.y+25;
@@ -144,21 +152,41 @@ var Shield = function(){
 Shield.prototype = Object.create(BonusItem.prototype);
 Shield.prototype.constructor = Shield;
 
-
-//create BonusItem Weapon objects
-var Weapon = function(){
+var ShieldDeployed = function(){
     BonusItem.call(this);
-    this.sprite = ['images/strike-1.png','images/strike-2.png',
-        'images/strike-3.png','images/strike-4.png','images/strike-5.png',
-        'images/strike-6.png','images/strike-7.png','images/strike-8.png'];
-    this.x = 96;
-    this.y = 41;
-    this.lane = this.y+20;
-    this.center = this.x+35;
-}
-Weapon.prototype = Object.create(BonusItem.prototype);
-Weapon.prototype.constructor = Weapon;
+    this.sprite = 'images/ShipShieldLt.png';
+    this.y = 0;
+    this.x = 0;
 
+}
+ShieldDeployed.prototype = Object.create(BonusItem.prototype);
+ShieldDeployed.prototype.constructor = ShieldDeployed;
+ShieldDeployed.prototype.render = function(){
+    ctx.drawImage(Resources.get(this.sprite), player.x-23, player.y);
+}
+var newShield = new ShieldDeployed;
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXX WEAPONS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+//create BonusItem Weapon objects **not yet implemented
+// var Weapon = function(){
+//     BonusItem.call(this);
+//     this.sprite = ['images/strike-1.png','images/strike-2.png',
+//         'images/strike-3.png','images/strike-4.png','images/strike-5.png',
+//         'images/strike-6.png','images/strike-7.png','images/strike-8.png'];
+//     this.x = 96;
+//     this.y = 41;
+//     this.lane = this.y+20;
+//     this.center = this.x+35;
+// }
+// Weapon.prototype = Object.create(BonusItem.prototype);
+// Weapon.prototype.constructor = Weapon;
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXX EXPLOSIONS XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 var Boom = function() {
     BonusItem.call(this);
     this.sprite = [ "images/boom-1.png", "images/boom-2.png", 
@@ -185,52 +213,92 @@ var allItems = [];
 function newItem(){
     var shield = new Shield();
     allItems.push(shield);
-    var weapon = new Weapon ();
-    allItems.push(weapon);
 }
 newItem();
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXX COLLISIONS DETECTION XXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+var lives=3, //Lives counter
+    kills=0, //kill counter **not yet implemented
+    shields=0; //how many shields the player has
 
 function checkCollisions() {
     if(allEnemies.length >= 1) {
         allEnemies.forEach(function(enemy) {
             //Check location of all enemies against player location
-            //reset player if collision
+            //check for shield and blow up enemy, iterate kill count
+            if (allItems.indexOf(newShield)>-1) {
+                if(player.lane === enemy.lane){
+                    if (player.x > enemy.x-50 && player.x-23 < enemy.right) {
+                        //update location for explosion and add it
+                        boom.x=enemy.x+12;
+                        boom.y=enemy.y;
+                        allItems.push(boom);
+                        //blow up the enemy
+                        var enemyIndex = allEnemies.indexOf(enemy);
+                        allEnemies.splice(enemyIndex, 1);
+                        kills++;
+                        //remove the shield
+                        var shieldIndex = allItems.indexOf(newShield);
+                        allItems.splice(shieldIndex,1);
+                        shields--;
+                    }
+                }
+            };
             if(player.lane === enemy.lane){
                 if (player.x > enemy.x-50 && player.x < enemy.right) {
                     boom.x=player.x-8;
                     boom.y=player.y+6;
                     allItems.push(boom);
-                    player.x = 273;
-                    player.y = 425;
+                    lives--;
+                    if (lives>0) {
+                        player.x = 298;
+                        player.y = 425;
+                    }else{
+                        player.x = -100;
+                        player.y = 425;
+                    };
                 }
             }
         });
     }
+    //CHECKS FOR AND PICKS UP ITEMS
     if(allItems.length >= 1) {
         allItems.forEach(function(item){
             //check location of ship against items
-            //pick up item
             if(player.lane === item.lane){
                 if (player.x+30 === item.center) {
+                    //pick up item
                     var index = allItems.indexOf(item);
                     allItems.splice(index, 1);
+                    allItems.push(newShield);
+                    shields++;
                 };
             };
         });
     }
 }
-var goal = 0; //update when player reaches other side
-var start = 0; //update when player returns to start
 
+
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXX LEVEL UP XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+//XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 // increase difficulty when player makes it back to start after reaching
 // the other side.  
+var goal = 0; //update when player reaches other side
+var returns = 0; //update when player returns to start
+
 function levelUp() {
-    if (61 === player.lane) if (goal === start) goal++;
+    if (61 === player.lane) if (goal === returns) goal++;
     if (476 === player.lane) {
-        if (goal > start) {
-            start++; //used to increase enemy.speed
+        if (goal > returns) {
+            returns++; //used to increase enemy.speed
             //add a new enemy spawn interval every 10 seconds
-            spawnInterval = setInterval(newEnemies, 10000);    
+            spawnInterval = setInterval(newEnemies, 10000);
+            //add another shield to the map
+            newItem();
         }
     }
 }
