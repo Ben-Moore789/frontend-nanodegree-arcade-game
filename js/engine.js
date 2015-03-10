@@ -121,7 +121,7 @@ var Engine = (function(global) {
         ctx.fillText("shields",378,565);
         ctx.fillText("kills",442,565);
         ctx.font="20px Orbitron";    
-        ctx.fillText(returns,272,585);
+        ctx.fillText(returns+1,272,585);
         ctx.fillText(lives,332,585);
         ctx.fillText(shields,388,585);
         ctx.fillText(kills,442,585);
