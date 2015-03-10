@@ -158,7 +158,7 @@ var Engine = (function(global) {
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        'images/smurfShip.png',
+        'images/smurfShip.png', 'images/gameOver.png',
         'images/frogShipUp.png', 'images/frogShipDn.png',
         'images/ShipShieldLt.png',
         'images/spaceBackground4.png',

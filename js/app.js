@@ -6,8 +6,9 @@ function getRandom(min, max) {
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ENEMIES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+var gameStatus = 0; //changes to 1 when game is over
 var Enemy = function() {
-    this.sprite = 'images/smurfShip.png';
+    this.sprite = ['images/smurfShip.png','images/gameOver.png'];
     this.cross = [108,191,274,357];
     this.startCross = getRandom(0,4);
     this.y = this.cross[this.startCross];
@@ -31,7 +32,7 @@ Enemy.prototype.update = function(dt) {
 }
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite[gameStatus]), this.x, this.y);
 }
 
 // Now instantiate your objects.
@@ -59,6 +60,7 @@ var Player = function(){
     this.lane = this.y+51;
 }
 
+//assigns 1 and 0 to direction ship is going, for use in rendering
 Player.prototype.update=function(){
     if (this.y>=425) {
         this.direction=0;
@@ -253,12 +255,18 @@ function checkCollisions() {
                     boom.y=player.y+6;
                     allItems.push(boom);
                     lives--;
+                    //check if layer has any lives left
                     if (lives>0) {
+                        //reposition back to start
                         player.x = 298;
                         player.y = 425;
                     }else{
+                        // move off screen
                         player.x = -100;
                         player.y = 425;
+                        // change gameStatus to game over
+                        Enemy.x = -506;
+                        gameStatus=1;
                     };
                 }
             }
