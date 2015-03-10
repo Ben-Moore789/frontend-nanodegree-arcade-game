@@ -1,11 +1,12 @@
-//random function for placing enemies and items
+//function for placing enemies and items
 function getRandom(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ENEMIES XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-var gameStatus = 0; //changes to 1 when game is over
+var gameStatus = 0; //changes to 1 when game is over then change enemies
+
 var Enemy = function() {
     this.sprite = ['images/smurfShip.png', 'images/gameOver.png'];
     this.cross = [108, 191, 274, 357];
@@ -34,8 +35,6 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite[gameStatus]), this.x, this.y);
 }
 
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
 var allEnemies = [];
 
 function newEnemies() {
@@ -45,7 +44,7 @@ function newEnemies() {
     allEnemies.push(enemy);
 }
 
-//Create enemies at intervals, adjusted based on level
+//Create enemies at intervals, additions handled in levelUP function
 var spawnInterval = setInterval(newEnemies, 1500);
 
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -154,6 +153,7 @@ var Shield = function() {
 Shield.prototype = Object.create(BonusItem.prototype);
 Shield.prototype.constructor = Shield;
 
+//once the shield is picked up, it becomes deployed
 var ShieldDeployed = function() {
     BonusItem.call(this);
     this.sprite = 'images/ShipShieldLt.png';
@@ -213,6 +213,7 @@ Boom.prototype = Object.create(BonusItem.prototype);
 Boom.prototype.constructor = Boom;
 var boom = new Boom;
 
+//instantiate items and start with 1 shield on the map
 var allItems = [];
 
 function newItem() {
@@ -225,7 +226,7 @@ newItem();
 //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
 var lives = 3, //Lives counter
-    kills = 0, //kill counter **not yet implemented
+    kills = 0, //kill counter
     shields = 0; //how many shields the player has
 
 function checkCollisions() {
@@ -257,7 +258,7 @@ function checkCollisions() {
                     boom.y = player.y + 6;
                     allItems.push(boom);
                     lives--;
-                    //check if layer has any lives left
+                    //check if player has any lives left
                     if (lives > 0) {
                         //reposition back to start
                         player.x = 286;
