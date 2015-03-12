@@ -70,7 +70,6 @@ var Engine = (function(global) {
      * game loop.
      */
     function init() {
-        reset();
         lastTime = Date.now();
         main();
     }
@@ -115,6 +114,7 @@ var Engine = (function(global) {
      */
     function render() {
         ctx.drawImage(Resources.get('images/spaceBackground4.png'),0,0);
+        //add text to scores and counters
         ctx.font="10px Orbitron";    
         ctx.fillText("level",272,565);
         ctx.fillText("lives",328,565);
@@ -145,21 +145,13 @@ var Engine = (function(global) {
         player.render();        
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
-     */
-    function reset() {
-        // noop
-    }
-
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
     Resources.load([
-        'images/smurfShip.png', 'images/gameOver.png',
-        'images/frogShipUp.png', 'images/frogShipDn.png',
+        'images/smurfShip.png', 'images/gameOver.png', // Serenity and Reaver ships
+        'images/frogShipUp.png', 'images/frogShipDn.png', // belong to Joss Whedon's Firefly
         'images/ShipShieldLt.png',
         'images/spaceBackground4.png',
         'images/shield-0.png', 'images/shield-1.png', //by Niantic Labs. Copyright 2015
