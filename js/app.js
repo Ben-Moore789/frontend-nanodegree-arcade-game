@@ -126,7 +126,7 @@ BonusItem.prototype.update = function(calls) {
             if (this === boom){ //here it checks if the item is actually an explosion
                 var index = allItems.indexOf(this); //and removes it if it is
                 allItems.splice(index,1);
-                this.imgCount = 0;
+                this.imgCount = 0; //set imgCount back to 0 for new versions
             }else{this.imgCount = 0;//normal items start the sequence of sprites over
             };
         };
@@ -147,14 +147,19 @@ var Shield = function() {
     this.startCol = getRandom(0, 7); 
     this.x = this.col[this.startCol];//assign random x position
     this.lane = this.y + 25; //common y reference for collision detection
-    this.center = this.x + 27; //center of object for collision detection
+    this.center = this.x + 27; //common x reference for collision detection
 }
 
 Shield.prototype = Object.create(BonusItem.prototype);
 
 Shield.prototype.constructor = Shield;
 
-var shield = new Shield;
+function newShield() {
+    //Create new shield
+    var shield = new Shield();
+    //Add shield to items array
+    allItems.push(shield);
+};
 
 //once the shield is picked up, it is deployed, this is the deployed shield object
 var ShieldUp = function() {
@@ -208,8 +213,8 @@ Boom.prototype.constructor = Boom;
 
 var boom = new Boom;
 
-//instantiate items and start with 1 shield on the map
-var allItems = [shield];
+//instantiate items list
+var allItems = [];
 
 //XXXXXXXXXXXXXXXXXXXXXX COLLISIONS DETECTION XXXXXXXXXXXXXXXXXXXXXXXXX
 var lives = 3, //Lives counter
@@ -284,6 +289,6 @@ function levelUp() {
         //when the player returns to the beginning after having reached the other side:
         returns++; //iterate returns indicating diffculty level
         spawnInterval = setInterval(newEnemies, 1e4); // add a new enemy spawn every 10 seconds
-        allItems.push(shield); //add a new shield to the map
+        newShield(); //add a new shield to the map
     }
 }
